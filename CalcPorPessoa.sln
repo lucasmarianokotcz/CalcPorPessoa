@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcPorPessoa", "CalcPorPessoa\CalcPorPessoa.csproj", "{177A9212-F8B9-4D77-B06C-1C6E77DBBC42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalcPorPessoa", "CalcPorPessoa\CalcPorPessoa.csproj", "{177A9212-F8B9-4D77-B06C-1C6E77DBBC42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcPorPessoa.Tests", "CalcPorPessoa.Tests\CalcPorPessoa.Tests.csproj", "{E6DF1381-5DB1-4698-A8CE-E48D9E47749D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalcPorPessoa.Tests", "CalcPorPessoa.Tests\CalcPorPessoa.Tests.csproj", "{E6DF1381-5DB1-4698-A8CE-E48D9E47749D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

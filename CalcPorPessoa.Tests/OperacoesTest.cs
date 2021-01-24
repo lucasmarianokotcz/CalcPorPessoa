@@ -55,7 +55,7 @@ namespace CalcPorPessoa.Tests
 		{
 			op.AdicionarPessoa("Lucas", 4);
 			op.AdicionarPessoa("Alex", 2);
-			string str = op.ValoresPorPessoa(600);
+			string str = op.ValoresPorPessoa(80.23m);
 			Assert.IsTrue(str.Length > 0);
 		}
 	}

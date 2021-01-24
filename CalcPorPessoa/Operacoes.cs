@@ -5,9 +5,9 @@ using System.Linq;
 namespace CalcPorPessoa
 {
 	public class Operacoes
-	{	
-		private decimal valorAPagar = 0;
-	
+	{
+		private decimal _valorAPagar = 0;
+
 		public List<Pessoa> ListaPessoas { get; set; }
 
 		public Operacoes()
@@ -17,21 +17,21 @@ namespace CalcPorPessoa
 
 		private void CalcularValores(decimal valorAPagar)
 		{
-			this.valorAPagar = valorAPagar;
+			_valorAPagar = valorAPagar;
 			int totalDependentes = 0;
 			foreach (Pessoa p in ListaPessoas)
 			{
 				totalDependentes += p.NumDependentes;
 			}
 
-			while (valorAPagar % totalDependentes != 0)
+			while (Math.Round(_valorAPagar % totalDependentes, 2) != 0)
 			{
-				this.valorAPagar += 0.01m;
+				_valorAPagar += 0.01m;
 			}
 
 			foreach (Pessoa p in ListaPessoas)
 			{
-				p.ValorCalculado = (valorAPagar / totalDependentes) * p.NumDependentes;
+				p.ValorCalculado = Math.Round(valorAPagar / totalDependentes * p.NumDependentes);
 			}
 		}
 
@@ -62,6 +62,7 @@ namespace CalcPorPessoa
 				throw new Exception("Já existe uma pessoa com esse nome!");
 			}
 		}
+
 		public void EditarPessoa(string nomeAntigo, string nomeNovo, int numDependentes)
 		{
 			if ((!ListaPessoas.Any(p => p.Nome.ToLower() == nomeNovo.Trim().ToLower())) && nomeNovo != nomeAntigo)
@@ -75,10 +76,12 @@ namespace CalcPorPessoa
 				throw new Exception("Já existe uma pessoa com esse nome!");
 			}
 		}
+
 		public void ExcluirPessoa(string nome)
 		{
 			ListaPessoas.RemoveAll(p => p.Nome.ToLower() == nome.ToLower());
 		}
+
 		public void ExcluirTodasPessoas()
 		{
 			ListaPessoas.Clear();
