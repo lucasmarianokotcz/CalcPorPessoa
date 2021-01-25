@@ -12,7 +12,17 @@ namespace CalcPorPessoa
 
 		public Operacoes()
 		{
+			var p1 = new Pessoa("Lucas", 4);
+			var p2 = new Pessoa("Alex", 1);
+			var p3 = new Pessoa("Joel", 2);
+			var p4 = new Pessoa("Luis", 2);
+			var p5 = new Pessoa("Teresa", 3);
 			ListaPessoas = new List<Pessoa>();
+			ListaPessoas.Add(p1);
+			ListaPessoas.Add(p2);
+			ListaPessoas.Add(p3);
+			ListaPessoas.Add(p4);
+			ListaPessoas.Add(p5);
 		}
 
 		private void CalcularValores(decimal valorAPagar)

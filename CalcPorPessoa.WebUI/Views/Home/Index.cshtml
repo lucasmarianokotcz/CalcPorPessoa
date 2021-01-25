@@ -1,7 +1,4 @@
-﻿@page
-@model IndexModel
-@{
-}
+﻿@model CalcPorPessoa.Operacoes
 
 <div class="row g-3 align-items-center mb-4">
 	<div class="col-auto">
@@ -15,7 +12,7 @@
 <div class="my-4">
 	<button class="btn btn-primary">Nova pessoa</button>
 	<form method="post" class="d-inline">
-		<button type="submit" asp-page="./DeleteAll" class="btn btn-danger float-end" onclick="return confirm('Tem certeza que deseja excluir todas as pessoas?');">Excluir todas pessoas</button>
+		<button type="submit" asp-action="DeleteAll" class="btn btn-danger float-end" onclick="return confirm('Tem certeza que deseja excluir todas as pessoas?');">Excluir todas pessoas</button>
 	</form>
 </div>
 
@@ -24,10 +21,10 @@
 		<thead>
 			<tr>
 				<th>
-					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].Nome)
+					@Html.DisplayNameFor(model => model.ListaPessoas[0].Nome)
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].NumDependentes)
+					@Html.DisplayNameFor(model => model.ListaPessoas[0].NumDependentes)
 				</th>
 				<th>
 					Ações
@@ -35,7 +32,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var item in Model.Operacoes.ListaPessoas)
+			@foreach (var item in Model.ListaPessoas)
 			{
 				<tr>
 					<td>
@@ -45,9 +42,9 @@
 						@Html.DisplayTextFor(modelItem => item.NumDependentes)
 					</td>
 					<td>
-						<a asp-page="./Edicao" asp-route-nome="@item.Nome" class="btn btn-sm btn-warning me-sm-1 mb-sm-0 mb-2">Editar</a>
-						<form method="post" class="d-inline">
-							<button type="submit" asp-page="./Delete" asp-route-nome="@item.Nome" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta pessoa? @item.Nome');">Excluir</button>
+						@*<a asp-page="./Edicao" asp-route-nome="@item.Nome" class="btn btn-sm btn-warning me-sm-1 mb-sm-0 mb-2">Editar</a>*@
+						<form method="post" asp-action="Delete" asp-route-nome="@item.Nome" class="d-inline">
+							<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta pessoa? @item.Nome');">Excluir</button>
 						</form>
 					</td>
 				</tr>
