@@ -1,0 +1,57 @@
+﻿@page
+@model IndexModel
+@{
+}
+
+<div class="row g-3 align-items-center mb-4">
+	<div class="col-auto">
+		<label for="valorCompra" class="col-form-label">Valor da compra (R$):</label>
+	</div>
+	<div class="col-6 col-sm-2">
+		<input type="text" id="valorCompra" class="form-control">
+	</div>
+</div>
+
+<div class="my-4">
+	<button class="btn btn-primary">Nova pessoa</button>
+	<form method="post" class="d-inline">
+		<button type="submit" asp-page="./DeleteAll" class="btn btn-danger float-end" onclick="return confirm('Tem certeza que deseja excluir todas as pessoas?');">Excluir todas pessoas</button>
+	</form>
+</div>
+
+<div class="table-responsive">
+	<table class="table table-responsive">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].Nome)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].NumDependentes)
+				</th>
+				<th>
+					Ações
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Operacoes.ListaPessoas)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Nome)
+					</td>
+					<td>
+						@Html.DisplayTextFor(modelItem => item.NumDependentes)
+					</td>
+					<td>
+						<a asp-page="./Edicao" asp-route-nome="@item.Nome" class="btn btn-sm btn-warning me-sm-1 mb-sm-0 mb-2">Editar</a>
+						<form method="post" class="d-inline">
+							<button type="submit" asp-page="./Delete" asp-route-nome="@item.Nome" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta pessoa? @item.Nome');">Excluir</button>
+						</form>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
