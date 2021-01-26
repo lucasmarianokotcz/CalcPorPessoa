@@ -40,9 +40,7 @@ namespace CalcPorPessoa.WebUI.Controllers
 				try
 				{
 					op.Operacoes.AdicionarPessoa(opVM.Pessoa.Nome, opVM.Pessoa.NumDependentes);
-					op.OperationFailed = false;
-					HttpContext.Session.SetObjectAsJson("operacoes", op);
-					return RedirectToAction(nameof(Index));
+					return OperationSuccess(op);
 				}
 				catch (Exception ex)
 				{
@@ -77,8 +75,7 @@ namespace CalcPorPessoa.WebUI.Controllers
 		{
 			OperacoesViewModel op = Operacoes;
 			op.Operacoes.ExcluirPessoa(nome);
-			HttpContext.Session.SetObjectAsJson("operacoes", op);
-			return RedirectToAction(nameof(Index));
+			return OperationSuccess(op);
 		}
 
 		[HttpPost]
@@ -87,8 +84,7 @@ namespace CalcPorPessoa.WebUI.Controllers
 		{
 			OperacoesViewModel op = Operacoes;
 			op.Operacoes.ExcluirTodasPessoas();
-			HttpContext.Session.SetObjectAsJson("operacoes", op);
-			return RedirectToAction(nameof(Index));
+			return OperationSuccess(op);
 		}
 
 		#endregion Http Methods
@@ -101,6 +97,13 @@ namespace CalcPorPessoa.WebUI.Controllers
 			{
 				HttpContext.Session.SetObjectAsJson("operacoes", new OperacoesViewModel() { Operacoes = new Operacoes() });
 			}
+		}
+
+		private ActionResult OperationSuccess(OperacoesViewModel op)
+		{
+			op.OperationFailed = false;
+			HttpContext.Session.SetObjectAsJson("operacoes", op);
+			return RedirectToAction(nameof(Index));
 		}
 
 		private ActionResult CreateUserFailed(OperacoesViewModel op, string errorMessage)
