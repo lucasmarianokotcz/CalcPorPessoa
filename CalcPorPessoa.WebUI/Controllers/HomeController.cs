@@ -1,46 +1,62 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CalcPorPessoa.WebUI.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace CalcPorPessoa.WebUI.Controllers
 {
 	public class HomeController : Controller
 	{
-		private static Operacoes operacoes = new Operacoes();
+		#region Properties
 
-		// GET: HomeController
+		public OperacoesViewModel Operacoes => HttpContext.Session.GetObjectFromJson<OperacoesViewModel>("operacoes");
+
+		#endregion Properties
+
+		#region Http Methods
+
 		public ActionResult Index()
 		{
-			return View(operacoes);
+			SetOperacoesViewModelInitial();
+			OperacoesViewModel op = Operacoes;
+
+			if (TempData["IsRedirect"] != null && (bool)TempData["IsRedirect"])
+			{
+				return View(op);
+			}
+
+			op.OperationFailed = false;
+			return View(op);
 		}
 
-		// GET: HomeController/Create
-		public ActionResult Create()
-		{
-			return View();
-		}
-
-		// POST: HomeController/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
+		public ActionResult Nova(OperacoesViewModel opVM)
 		{
-			try
+			OperacoesViewModel op = Operacoes;
+
+			if (ModelState.IsValid)
 			{
-				return RedirectToAction(nameof(Index));
+				try
+				{
+					op.Operacoes.AdicionarPessoa(opVM.Pessoa.Nome, opVM.Pessoa.NumDependentes);
+					op.OperationFailed = false;
+					HttpContext.Session.SetObjectAsJson("operacoes", op);
+					return RedirectToAction(nameof(Index));
+				}
+				catch (Exception ex)
+				{
+					return CreateUserFailed(op, ex.Message);
+				}
 			}
-			catch
-			{
-				return View();
-			}
+			return CreateUserFailed(op, "Verifique campos inválidos.");
 		}
 
-		// GET: HomeController/Edit/5
 		public ActionResult Edit(int id)
 		{
 			return View();
 		}
 
-		// POST: HomeController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(int id, IFormCollection collection)
@@ -55,36 +71,47 @@ namespace CalcPorPessoa.WebUI.Controllers
 			}
 		}
 
-		// POST: HomeController/Delete/Lucas
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Delete(string nome)
 		{
-			try
-			{
-				operacoes.ExcluirPessoa(nome);
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
+			OperacoesViewModel op = Operacoes;
+			op.Operacoes.ExcluirPessoa(nome);
+			HttpContext.Session.SetObjectAsJson("operacoes", op);
+			return RedirectToAction(nameof(Index));
 		}
 
-		// POST: HomeController/DeleteAll
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult DeleteAll()
 		{
-			try
+			OperacoesViewModel op = Operacoes;
+			op.Operacoes.ExcluirTodasPessoas();
+			HttpContext.Session.SetObjectAsJson("operacoes", op);
+			return RedirectToAction(nameof(Index));
+		}
+
+		#endregion Http Methods
+
+		#region Private Methods
+
+		private void SetOperacoesViewModelInitial()
+		{
+			if (HttpContext.Session.GetObjectFromJson<OperacoesViewModel>("operacoes") == null)
 			{
-				operacoes.ExcluirTodasPessoas();
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
+				HttpContext.Session.SetObjectAsJson("operacoes", new OperacoesViewModel() { Operacoes = new Operacoes() });
 			}
 		}
+
+		private ActionResult CreateUserFailed(OperacoesViewModel op, string errorMessage)
+		{
+			TempData["IsRedirect"] = true;
+			ModelState.AddModelError(string.Empty, errorMessage);
+			op.OperationFailed = true;
+			HttpContext.Session.SetObjectAsJson("operacoes", op);
+			return View("Index", op);
+		}
+
+		#endregion Private Methods
 	}
 }

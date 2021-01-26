@@ -1,4 +1,4 @@
-﻿@model CalcPorPessoa.Operacoes
+﻿@model CalcPorPessoa.WebUI.ViewModel.OperacoesViewModel
 
 <div class="row g-3 align-items-center mb-4">
 	<div class="col-auto">
@@ -10,7 +10,7 @@
 </div>
 
 <div class="my-4">
-	<button class="btn btn-primary">Nova pessoa</button>
+	<button id="btnModal" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Nova pessoa</button>
 	<form method="post" class="d-inline">
 		<button type="submit" asp-action="DeleteAll" class="btn btn-danger float-end" onclick="return confirm('Tem certeza que deseja excluir todas as pessoas?');">Excluir todas pessoas</button>
 	</form>
@@ -21,10 +21,10 @@
 		<thead>
 			<tr>
 				<th>
-					@Html.DisplayNameFor(model => model.ListaPessoas[0].Nome)
+					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].Nome)
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.ListaPessoas[0].NumDependentes)
+					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].NumDependentes)
 				</th>
 				<th>
 					Ações
@@ -32,7 +32,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var item in Model.ListaPessoas)
+			@foreach (var item in Model.Operacoes.ListaPessoas)
 			{
 				<tr>
 					<td>
@@ -52,3 +52,9 @@
 		</tbody>
 	</table>
 </div>
+
+@await Html.PartialAsync("_Create", Model)
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
