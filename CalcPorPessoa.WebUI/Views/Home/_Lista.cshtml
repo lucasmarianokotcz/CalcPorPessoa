@@ -1,0 +1,48 @@
+﻿@model CalcPorPessoa.WebUI.ViewModel.OperacoesViewModel
+
+<div class="my-4">
+	<button id="btnModal" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Nova pessoa</button>
+	<form method="post" class="d-inline">
+		<button type="submit" asp-action="DeleteAll" class="btn btn-danger float-end" onclick="return confirm('Tem certeza que deseja excluir todas as pessoas?');">Excluir todas as pessoas</button>
+	</form>
+</div>
+
+<div class="table-responsive">
+	<table class="table table-responsive table-bordered">
+		<thead class="table-light">
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].Nome)
+				</th>
+				<th class="text-nowrap">
+					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].NumDependentes)
+				</th>
+				<th>
+					Ações
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Operacoes.ListaPessoas)
+			{
+				<tr class="text-nowrap">
+					<td>
+						@Html.DisplayFor(modelItem => item.Nome)
+					</td>
+					<td>
+						@Html.DisplayTextFor(modelItem => item.NumDependentes)
+					</td>
+					<td>
+						<button id="btnModalEdit" type="button" class="btn btn-sm btn-warning me-sm-1 me-1" data-bs-toggle="modal" data-bs-target="#exampleModalEdit" onclick="loadPessoa(this)">Editar</button>
+						<form method="post" asp-action="Delete" asp-route-nome="@item.Nome" class="d-inline">
+							<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta pessoa? @item.Nome');">Excluir</button>
+						</form>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+@await Html.PartialAsync("_Nova", Model)
+@await Html.PartialAsync("_Editar", Model)

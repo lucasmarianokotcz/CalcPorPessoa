@@ -1,15 +1,18 @@
 ﻿@model CalcPorPessoa.WebUI.ViewModel.OperacoesViewModel
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<form asp-action="Nova">
-			<div class="modal-content">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<form asp-action="Nova">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Nova pessoa</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					@if (ViewData.ModelState.Keys.Any(x => x == "Nova"))
+					{
+						<div class="text-danger">@Html.ValidationSummary(string.Empty, "Nova")</div>
+					}
 					<div class="mb-3">
 						<label asp-for="Pessoa.Nome" class="form-label"></label>
 						<input asp-for="Pessoa.Nome" class="form-control" id="txtNomePessoa" />
@@ -23,20 +26,15 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-					<button type="submit" class="btn btn-primary">Salvar</button>
+					<button type="submit" class="btn btn-success">Salvar</button>
 				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
 </div>
 
 <script>
 	window.onload = function () {
-		var successModal = '@Html.Raw(Json.Serialize(Model.OperationFailed))';
 
-		if (successModal === "true") {
-			var btnModal = document.getElementById("btnModal");
-			btnModal.click();
-		}
 	}
 </script>

@@ -1,0 +1,66 @@
+﻿@model CalcPorPessoa.WebUI.ViewModel.OperacoesViewModel
+<!-- Modal -->
+<div class="modal fade" id="exampleModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<form asp-action="Editar">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModal">Editar pessoa</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input asp-for="NomeAntigo" id="hdfNomeAntigo" type="hidden" />
+					@if (ViewData.ModelState.Keys.Any(x => x == "Editar"))
+					{
+						<div class="text-danger">@Html.ValidationSummary(string.Empty, "Editar")</div>
+					}
+					<div class="mb-3">
+						<label asp-for="Pessoa.Nome" class="form-label"></label>
+						<input asp-for="Pessoa.Nome" class="form-control" id="txtNomePessoaEdit" />
+						<span asp-validation-for="Pessoa.Nome" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						<label asp-for="Pessoa.NumDependentes" class="form-label"></label>
+						<input asp-for="Pessoa.NumDependentes" class="form-control" id="txtNumDependentesEdit" />
+						<span asp-validation-for="Pessoa.NumDependentes" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					<button type="submit" class="btn btn-warning">Salvar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	window.onload = function () {
+		var successModalAdd = '@Html.Raw(Json.Serialize(Model.OperationAddFailed))';
+
+		if (successModalAdd === "true") {
+			var btnModalAdd = document.getElementById("btnModal");
+			btnModalAdd.click();
+		}
+
+		var successModalEdit = '@Html.Raw(Json.Serialize(Model.OperationEditFailed))';
+
+		if (successModalEdit === "true") {
+			var btnModalEdit = document.getElementById("btnModalEdit");
+			btnModalEdit.click();
+		}
+	}
+
+	function loadPessoa(e) {
+		let nome = e.parentElement.parentElement.children[0].innerText;
+		let numDependentes = e.parentElement.parentElement.children[1].innerText;
+
+		let txtNomePessoaEdit = document.getElementById("txtNomePessoaEdit");
+		let txtNumDependentesEdit = document.getElementById("txtNumDependentesEdit");
+		let hdfNomeAntigo = document.getElementById("hdfNomeAntigo");
+
+		hdfNomeAntigo.value = nome;
+		txtNomePessoaEdit.value = nome;
+		txtNumDependentesEdit.value = numDependentes;
+	}
+</script>

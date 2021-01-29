@@ -24,14 +24,14 @@ namespace CalcPorPessoa
 				totalDependentes += p.NumDependentes;
 			}
 
-			while (Math.Round(_valorAPagar % totalDependentes, 2) != 0)
+			while (_valorAPagar * 100 % totalDependentes != 0)
 			{
 				_valorAPagar += 0.01m;
 			}
 
 			foreach (Pessoa p in ListaPessoas)
 			{
-				p.ValorCalculado = Math.Round(valorAPagar / totalDependentes * p.NumDependentes);
+				p.ValorCalculado = Math.Round(_valorAPagar / totalDependentes * p.NumDependentes, 2);
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace CalcPorPessoa
 
 		public void EditarPessoa(string nomeAntigo, string nomeNovo, int numDependentes)
 		{
-			if ((!ListaPessoas.Any(p => p.Nome.ToLower() == nomeNovo.Trim().ToLower())) && nomeNovo != nomeAntigo)
+			if ((!ListaPessoas.Any(p => p.Nome.ToLower() == nomeNovo.Trim().ToLower())) || nomeNovo == nomeAntigo)
 			{
 				ListaPessoas.RemoveAll(p => p.Nome.ToLower() == nomeAntigo.ToLower());
 				Pessoa p = new Pessoa(nomeNovo.Trim(), numDependentes);

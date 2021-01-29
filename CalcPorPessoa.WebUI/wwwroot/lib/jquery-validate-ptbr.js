@@ -21,3 +21,12 @@ jQuery.extend(jQuery.validator.messages, {
     max: jQuery.validator.format("Por favor, forne&ccedil;a um valor menor ou igual a {0}."),
     min: jQuery.validator.format("Por favor, forne&ccedil;a um valor maior ou igual a {0}.")
 });
+
+jQuery.extend(jQuery.validator.methods, {
+    date: function (value, element) {
+        return this.optional(element) || /^\d\d?\/\d\d?\/\d\d\d?\d?$/.test(value);
+    },
+    number: function (value, element) {
+        return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?$/.test(value);
+    }
+});

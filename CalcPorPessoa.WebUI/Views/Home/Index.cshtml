@@ -1,60 +1,97 @@
 ﻿@model CalcPorPessoa.WebUI.ViewModel.OperacoesViewModel
 
-<div class="row g-3 align-items-center mb-4">
-	<div class="col-auto">
-		<label for="valorCompra" class="col-form-label">Valor da compra (R$):</label>
-	</div>
-	<div class="col-6 col-sm-2">
-		<input type="text" id="valorCompra" class="form-control">
-	</div>
-</div>
+@await Html.PartialAsync("_Lista", Model)
 
-<div class="my-4">
-	<button id="btnModal" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Nova pessoa</button>
-	<form method="post" class="d-inline">
-		<button type="submit" asp-action="DeleteAll" class="btn btn-danger float-end" onclick="return confirm('Tem certeza que deseja excluir todas as pessoas?');">Excluir todas pessoas</button>
+@if (Model.Operacoes.ListaPessoas.Count >= 2)
+{
+	<form method="post">
+		<div class="row g-3 align-items-center mb-4 d-flex justify-content-center mt-3">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="col-auto">
+				<label for="valorCompra" class="col-form-label fw-bold">Valor da compra (R$):</label>
+			</div>
+			<div class="col-5 col-sm-3">
+				<input asp-for="@Model.ValorCompra" class="form-control" maxlength="14" id="valorCompra" onfocus="this.value=''" />
+			</div>
+			<div class="text-center">
+				<span asp-validation-for="@Model.ValorCompra" class="text-danger"></span>
+			</div>
+			<div class="text-center">
+				<button type="submit" asp-action="VerResultado" class="btn btn-primary">Ver resultado</button>
+			</div>
+		</div>
 	</form>
-</div>
 
-<div class="table-responsive">
-	<table class="table table-responsive">
-		<thead>
-			<tr>
-				<th>
-					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].Nome)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Operacoes.ListaPessoas[0].NumDependentes)
-				</th>
-				<th>
-					Ações
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.Operacoes.ListaPessoas)
-			{
-				<tr>
-					<td>
-						@Html.DisplayFor(modelItem => item.Nome)
-					</td>
-					<td>
-						@Html.DisplayTextFor(modelItem => item.NumDependentes)
-					</td>
-					<td>
-						@*<a asp-page="./Edicao" asp-route-nome="@item.Nome" class="btn btn-sm btn-warning me-sm-1 mb-sm-0 mb-2">Editar</a>*@
-						<form method="post" asp-action="Delete" asp-route-nome="@item.Nome" class="d-inline">
-							<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta pessoa? @item.Nome');">Excluir</button>
-						</form>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-</div>
+	@*<p>@Html.Raw(ViewBag.Relatorio)</p>*@
 
-@await Html.PartialAsync("_Create", Model)
+	if (Model.Relatorio != null && Model.Relatorio.LstPessoa.Count > 0)
+	{
+		<h2>Relatório de valores por pessoa:</h2>
+
+		<div class="table-responsive">
+			<table class="table table-responsive table-bordered">
+				<thead class="table-light">
+					<tr>
+						<th>
+							@Html.DisplayNameFor(model => model.Relatorio.LstPessoa[0].Nome)
+						</th>
+						<th class="text-nowrap">
+							@Html.DisplayNameFor(model => model.Relatorio.LstPessoa[0].ValorCalculado)
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.Relatorio.LstPessoa)
+					{
+						<tr class="text-nowrap">
+							<td>
+								@Html.DisplayFor(modelItem => item.Nome)
+							</td>
+							<td>
+								@Html.DisplayTextFor(modelItem => item.ValorCalculado)
+							</td>
+						</tr>
+					}
+					<tr class="table-light">
+						<td colspan="2" class="text-center text-success fs-5 fw-bold">Totais</td>
+					</tr>
+					<tr>
+						<td>
+							<h6>Valor da compra:</h6>
+						</td>
+						<td>
+							<h6>R$ @Model.Relatorio.ValorCompra</h6>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h6>Soma dos valores:</h6>
+						</td>
+						<td>
+							<h6>R$ @Model.Relatorio.SomaValores</h6>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		@*<h5>Valor da compra: R$ @Model.Relatorio.ValorCompra</h5>
+			<h5>Soma dos valores: R$ @Model.Relatorio.SomaValores</h5>*@
+	}
+}
 
 @section Scripts {
 	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+	$(function () {
+		$("#valorCompra").maskMoney(
+			{
+				thousands: '.',
+				decimal: ',',
+				allowZero: false
+			}
+		);
+	})
+</script>
