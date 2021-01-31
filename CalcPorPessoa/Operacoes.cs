@@ -15,10 +15,10 @@ namespace CalcPorPessoa
 			ListaPessoas = new List<Pessoa>();
 		}
 
-		private void CalcularValores(decimal valorAPagar)
+		private void CalcularValores(decimal valorAPagar, int numDependentesCompartilhados)
 		{
 			_valorAPagar = valorAPagar;
-			int totalDependentes = 0;
+			int totalDependentes = numDependentesCompartilhados;// * ListaPessoas.Count;
 			foreach (Pessoa p in ListaPessoas)
 			{
 				totalDependentes += p.NumDependentes;
@@ -31,13 +31,18 @@ namespace CalcPorPessoa
 
 			foreach (Pessoa p in ListaPessoas)
 			{
-				p.ValorCalculado = Math.Round(_valorAPagar / totalDependentes * p.NumDependentes, 2);
+				p.ValorCalculado = Math.Round(_valorAPagar / totalDependentes * (p.NumDependentes + ((decimal)numDependentesCompartilhados / ListaPessoas.Count)), 2);
 			}
 		}
 
 		public string ValoresPorPessoa(decimal valorAPagar)
 		{
-			CalcularValores(valorAPagar);
+			int _numDependentesCompartilhados = 3;
+
+			/*TODO:
+			 * Adicionar um campo ao lado do valor de compra, campo de número inteiro maior que 1 e <= 100 (mesma regra do numDependentes)*/
+
+			CalcularValores(valorAPagar, _numDependentesCompartilhados);
 
 			string relatório = "Relatório de valores por pessoa:\n";
 			decimal somaValores = 0;

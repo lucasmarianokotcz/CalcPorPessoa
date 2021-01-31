@@ -41,44 +41,6 @@ namespace CalcPorPessoa.WebUI.Controllers
 			return View(op);
 		}
 
-		private RelatorioViewModel FormatRelatorio(string relatorio)
-		{
-			try
-			{				
-				var rel1 = relatorio.Split("\n\n", StringSplitOptions.RemoveEmptyEntries).First().Split("\n", StringSplitOptions.RemoveEmptyEntries);
-				var rel2 = relatorio.Split("\n\n", StringSplitOptions.RemoveEmptyEntries).Last().Split("\n", StringSplitOptions.RemoveEmptyEntries);
-
-				var resultRel1 = rel1.Skip(1);
-
-				var lstPessoas = new List<Pessoa>();
-				foreach (var item in resultRel1)
-				{
-					var nome = item.Split(':').First();
-					var valor = item.Split(':').Last().Trim().Remove(0, 2);
-
-					lstPessoas.Add(new Pessoa()
-					{
-						Nome = nome,
-						ValorCalculado = decimal.Parse(valor)
-					});
-				}
-
-				var relatorioVM = new RelatorioViewModel()
-				{
-					LstPessoa = lstPessoas,
-					ValorCompra = decimal.Parse(rel2.First().Split(':').Last().Trim().Remove(0, 2)),
-					SomaValores = decimal.Parse(rel2.Last().Split(':').Last().Trim().Remove(0, 2))
-				};
-
-				//relatorio = relatorio.Replace("\n", "<br>");
-				return relatorioVM;
-			}
-			catch (Exception)
-			{
-				return new RelatorioViewModel();
-			}
-		}
-
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult Nova(OperacoesViewModel opVM)
@@ -235,6 +197,44 @@ namespace CalcPorPessoa.WebUI.Controllers
 			catch (Exception)
 			{
 				return View("Index");
+			}
+		}
+
+		private RelatorioViewModel FormatRelatorio(string relatorio)
+		{
+			try
+			{
+				var rel1 = relatorio.Split("\n\n", StringSplitOptions.RemoveEmptyEntries).First().Split("\n", StringSplitOptions.RemoveEmptyEntries);
+				var rel2 = relatorio.Split("\n\n", StringSplitOptions.RemoveEmptyEntries).Last().Split("\n", StringSplitOptions.RemoveEmptyEntries);
+
+				var resultRel1 = rel1.Skip(1);
+
+				var lstPessoas = new List<Pessoa>();
+				foreach (var item in resultRel1)
+				{
+					var nome = item.Split(':').First();
+					var valor = item.Split(':').Last().Trim().Remove(0, 2);
+
+					lstPessoas.Add(new Pessoa()
+					{
+						Nome = nome,
+						ValorCalculado = decimal.Parse(valor)
+					});
+				}
+
+				var relatorioVM = new RelatorioViewModel()
+				{
+					LstPessoa = lstPessoas,
+					ValorCompra = decimal.Parse(rel2.First().Split(':').Last().Trim().Remove(0, 2)),
+					SomaValores = decimal.Parse(rel2.Last().Split(':').Last().Trim().Remove(0, 2))
+				};
+
+				//relatorio = relatorio.Replace("\n", "<br>");
+				return relatorioVM;
+			}
+			catch (Exception)
+			{
+				return new RelatorioViewModel();
 			}
 		}
 
